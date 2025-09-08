@@ -12,6 +12,7 @@ SetCamPos:: function(pos: Vector3, smoothness: Number) <- sets camera position (
 ClosestToMouseRadius:: function(teamcheck: Boolean, wallcheck: Boolean, radius: Radius): Model
 mouse1click:: function() <- This is for triggerbot basically triggers mouse1click you can change the function for like shoot functions
 ]]
+
 getgenv().GetCharacter = getgenv().GetCharacter or function(plr: Player): Model
     return plr.Character
 end
