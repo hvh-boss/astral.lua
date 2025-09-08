@@ -11,6 +11,9 @@ Convert3DTo2D:: function(pos: Vector3): Vector2
 SetCamPos:: function(pos: Vector3, smoothness: Number) <- sets camera position ( this is for aimbot )
 ClosestToMouseRadius:: function(teamcheck: Boolean, wallcheck: Boolean, radius: Radius): Model
 mouse1click:: function() <- This is for triggerbot basically triggers mouse1click you can change the function for like shoot functions
+
+Global important variables:
+getgenv().ClosestToMouse <- This returns a character closest to the legitbot fov radius.. Or you can just usethe closesttomouseradius function
 ]]
 
 getgenv().GetCharacter = getgenv().GetCharacter or function(plr: Player): Model
@@ -100,3 +103,128 @@ getgenv().ClosestToMouseRadius = getgenv().ClosestToMouseRadius or function(team
     return closestCharacter
 end
 getgenv().mouse1click = getgenv().mouse1click
+-- HOOKS (__namecall)
+print('hooks')
+local oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
+	local method = getnamecallmethod()
+	local args = {...}
+	if SETTINGS.LegitBot.Enabled and method == "FindPartOnRayWithIgnoreList" and GetCharacter(LocalPlayer) and getgenv().ClosestToMouse ~= nil then
+		print('ok')
+		args[1] = Ray.new(GetCharacter(LocalPlayer).Head.Position, (getgenv().ClosestToMouse[SETTINGS.LegitBot.Hitbox].Position - GetCharacter(LocalPlayer).Head.Position).unit * 1000)
+		return oldNamecall(self,unpack(args))
+	elseif method == "Kick" then
+		return
+	end
+	return oldNamecall(self, ...)
+end)
+-- HOOKS (__index)
+
+-- HOOKS (__newindex)
+
+--[[ SETTINGS ( this is automatically set in the global env )
+
+getgenv().GC = {
+    Drawing = {Line = setmetatable(table.create(100, nil), { __mode = "v" })}, -- preallocates
+    Characters = setmetatable(table.create(100, nil), { __mode = "v" }), -- preallocates
+    Players = {
+        Connections = setmetatable(table.create(100, nil), { __mode = "v" }), -- preallocates
+    },
+    Raycast = {
+        Enabled = true,
+        WithRadius = {Enabled = true, Value = 50, Character = nil},
+        WithRaycast = {Enabled = true, Character = nil},
+        WithTeammate = {Enabled = true, Character = nil}
+    },
+}
+
+getgenv().SETTINGS = {
+    Movement = {
+        Legit = {
+            WalkSpeed = {
+                Enabled = false,
+                Value = 20,
+            },
+            JumpPower = {
+                Enabled = false,
+                Value = 50,
+            },
+            Bunnyhop = {
+                Enabled = false,
+                Strafe = false,
+                StrafeValue = 100,
+                Delay = 0,
+            },
+        },
+        Rage = {
+            AntiAim = {
+                Enabled = false,
+                Type = "Jitter",
+                YawOffset = 1,
+            },
+        },
+    },
+    Client = {
+        ForceFov = {
+            Enabled = false,
+            Value = 90,
+        },
+        Ambient = {
+            Enabled = false,
+            Ambient = Color3.new(0,0,0),
+            OutdoorAmbient = Color3.new(128,128,128),
+            TimeOfDay = 12,
+        },
+        ThirdPerson = {
+            Enabled = false,
+            Value = 20,
+        }
+    },
+    ESP = {
+        Type = "Bottom",
+        Line = {
+            Enabled = false,
+            Transparency = 0.3,
+            Thickness = 2,
+            Color = Color3.new(1,1,1),
+        },
+        Highlight = {
+            Enabled = false,
+            Teamcheck = false,
+            FillTransparency = 0.8,
+            OutlineTransparency = 0.8,
+            Color = Color3.new(1,1,1),
+
+        }
+    },
+    LegitBot = {
+        Target = nil,
+        Enabled = false,
+        Teamcheck = false,
+        Radius = 60,
+        Smoothness = 100,
+        Wallcheck = true,
+        Hitbox = "Head",
+        Fov = true,
+        Line = true,
+        Keybind = Enum.UserInputType.MouseButton1,
+        Drawing = {},
+        Type = "Aimlock",
+    },
+    Triggerbot = {
+        Enabled = false,
+        Teamcheck = false,
+        Hitbox = "Any",
+        ReactionTime = 0.01,
+
+
+    },
+    RageBot = {
+        Enabled = false,
+        Teamcheck = true,
+        Radius = 30,
+        Smoothness = 10,
+        Wallcheck = true
+    },
+}
+
+]]
