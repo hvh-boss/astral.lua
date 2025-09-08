@@ -108,7 +108,7 @@ print('hooks')
 local oldNamecall; oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
 	local method = getnamecallmethod()
 	local args = {...}
-	if SETTINGS.LegitBot.Enabled and SETTINGS.LegitBot.Type == "Silentaim" and method == "FindPartOnRayWithIgnoreList" and GetCharacter(LocalPlayer) and getgenv().ClosestToMouse ~= nil then
+	if SETTINGS.LegitBot.Enabled and SETTINGS.LegitBot.Type == "Silentaim" and getgenv().ClosestToMouse ~= nil and method == "FindPartOnRayWithIgnoreList" and GetCharacter(LocalPlayer) then
 		print('ok')
 		args[1] = Ray.new(GetCharacter(LocalPlayer).Head.Position, (getgenv().ClosestToMouse[SETTINGS.LegitBot.Hitbox].Position - GetCharacter(LocalPlayer).Head.Position).Unit * 1000)
 		return oldNamecall(self,table.unpack(args))
