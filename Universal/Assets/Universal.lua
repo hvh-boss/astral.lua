@@ -105,7 +105,7 @@ end
 getgenv().mouse1click = getgenv().mouse1click
 -- HOOKS (__namecall)
 print('hooks')
-local oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
+local oldNamecall; oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
 	local method = getnamecallmethod()
 	local args = {...}
 	if SETTINGS.LegitBot.Enabled and SETTINGS.LegitBot.Type == "Silentaim" and method == "FindPartOnRayWithIgnoreList" and GetCharacter(LocalPlayer) and getgenv().ClosestToMouse ~= nil then
